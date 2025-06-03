@@ -22,7 +22,7 @@ const store = useStore()
             v-for="(modal, index) in store.modals" 
             :key="index" 
             :appear="true" 
-            :name="modal.transition || 'fade'"
+            :name="modal.animation || 'nested'"
         >
             <component 
                 :is="modal.component" 
