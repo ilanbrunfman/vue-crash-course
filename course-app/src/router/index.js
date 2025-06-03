@@ -11,34 +11,67 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'home',
+      redirect: '/jobs'
+    },
+    // {
+    //   path: '/:username',
+    //   name: 'profile',
+    //   component: () => import('@/views/ProfileView.vue'),
+    //   beforeEnter: (to, from, next) => {
+    //     const isNotAuthenticated = !store.getAuthentication || !store.authentication.active ;
+    //     if (isNotAuthenticated) {
+    //       next('/'); // Redirect to
+    //     } else {
+    //       next(); // Proceed to the route
+    //     }
+    //   },
+    // },
+    {
+      path: '/jobs',
+      name: 'jobs',
       component: HomeView,
     },
     {
       path: '/login',
       name: 'Login',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
       component: () => import('@/views/LoginView.vue'),
     },
     {
       path: '/signup',
       name: 'Signup',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('@/views/SignupView.vue'),
-    },
+
+      component: () => import('@/views/SignupView.vue'),    },
     {
       path: '/users',
       name: 'users',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
       component: () => import('@/views/UsersView.vue'),
+      beforeEnter: (to, from, next) => {
+        const isAuthenticated = !store.getAuthentication || !store.authentication.active || store.authentication.type !== 'admin';
+        if (isAuthenticated) {
+          next('/'); // Redirect to
+        } else {
+          next(); // Proceed to the route
+        }
+      },
     },
     {
+      path: '/:username',
+      name: 'user',
+      component: () => import('@/views/ProfileView.vue'),
+      beforeEnter: (to, from, next) => {
+        // const isNotAuthenticated = !store.getAuthentication || !store.authentication.active || store.authentication.type !== 'admin';
+        const isNotAuthenticated = !store.getAuthentication || !store.authentication.active;
+        if (isNotAuthenticated) {
+          next('/'); // Redirect to
+        } else {
+          next(); // Proceed to the route
+        }
+      },
+      // meta: {
+      //   title: store.getAuthentication.user.firstName + ' ' + store.getAuthentication.user.lastName
+      // }
+    },
+    {      
       path: '/about',
       name: 'about',
       // route level code-splitting
@@ -46,10 +79,15 @@ const router = createRouter({
       // which is lazy-loaded when the route is visited.
       component: () => import('@/views/AboutView.vue'),
     },
+    {
+      path: '/jobs/add-job',
+      name: 'Add Job',
+      component: () => import('@/views/AddJob.vue'),
+    },
     {  
-      // path: "/:pathMatch(.*)*",
-      path: "/:catchAll(.*)",
-      name: "not-found",
+      path: "/:pathMatch(.*)*",
+      // path: "/:catchAll(.*)",
+      name: "page-not-found",
       component: () => import("@/views/NotFoundView.vue"),
       meta: {
         title: 'Page not found'
@@ -63,9 +101,9 @@ router.beforeEach((to, from) => {
 
   document.title = to.meta?.title ?? 'Default Title'
 
-  const validated = !store.getAuthentication || store.authentication.active == false
+  const validated = !store.getAuthentication || !store.authentication.active
 
-  if(to.path == '/' && validated ) {
+  if(to.path == '/jobs' && validated ) {
     return "/login";
   }
   
@@ -73,11 +111,9 @@ router.beforeEach((to, from) => {
     return "/login";
   }
   
-  if( to.path == '/users' && store.authentication.type !== 'admin'){
-    return "/";
-  } else if(to.path == '/users' && validated) {
+  if(to.path == '/jobs/add-job' && validated) {
     return "/login";
-  } 
+  }
   
   console.log('testing', store.authentication)
 })

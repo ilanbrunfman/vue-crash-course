@@ -1,7 +1,8 @@
 <script setup>
-import { ref, computed, } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router'
 import { useStore } from '@/stores/index.js'
+import IconUser from '@/components/icons/IconUser.vue'
 import IconSignout from '@/components/icons/IconSignout.vue'
 
 const store = useStore()
@@ -11,7 +12,15 @@ const logOut = () => {
     store.SET_AUTHENTICATION({active: false, type: 'deualt'})
     router.push('/login')
 }
-const user = store.getUser.user
+const user = ref({})
+// user.value = store.users.find((user) => user.id === store.getUser.user.id)
+
+onMounted(() => {
+    user.value = store.users.find((user) => user.id === store.getUser.user.id)
+})
+// const user = computed(() => {
+//     return store.users.find(( user ) => user.id === store.getUser.user.id)
+// } )
 
 const links = ref([
     { to: '/', title: 'Jobs', rule: ['admin', 'user'], },
@@ -19,13 +28,15 @@ const links = ref([
 ])
 
 const filteredLinks = computed(() => {
-    return links.value.filter(link => link.rule.includes(user.type))
+    return links.value.filter(link => link.rule.includes(store.getUser.type))
 })
 
 const dropdown = ref(false)
 
 const toggleDropdown = () => {
-    dropdown.value = !dropdown.value
+    setTimeout(() => {
+        dropdown.value = !dropdown.value
+    }, 10)
 }
 
 window.onclick = function(event) {
@@ -53,26 +64,21 @@ window.onclick = function(event) {
             </div>
             <div class="d-flex gap-2 align-items-center position-relative">
                 <button class="user fw-500 clr-white text-underline dropbtn" @click="toggleDropdown">
-                    {{ user.firstName }} {{ user.lastName }}
+                    <!-- {{ user.firstName }} {{ user.lastName }} -->
+                    <IconUser />
                 </button>
                 
 
                 <transition name="dropdown-animation" mode="out-in">
                     <div v-if="dropdown" class="dropdown">
-                        <div class="row">
-                            <div class="item">
-                                <span></span>
-                                <p class="item-test">
-                                    {{ user.firstName }} {{ user.lastName }}
-                                </p>
-                            </div>
+                        <div class="item item-link item-signout" @click="logOut()">
+                            <IconSignout />
+                            <label>Sign out</label>
                         </div>
-                        <div class="row">
-                            <div class="item item-link item-signout" @click="logOut()">
-                                <IconSignout />
-                                <label>Sign out</label>
-                            </div>
-                        </div>
+                        <router-link :to="`${store.getUser.user.username}`" class="item item-link item-signout" >
+                            <IconUser />
+                            <label class="text-capitalize">{{store.getUser.user.firstName}} {{ store.getUser.user.lastName }}</label>
+                        </router-link>
                     </div>
                 </transition>
             </div>
@@ -90,7 +96,8 @@ window.onclick = function(event) {
     left: 0;
     width: 100%;
     min-height: 64px;
-    background-color: #512DA8;
+    background-color: var(--background);
+    // background-color: #512DA8;
     // border-bottom: solid 1px var(--vt-c-s-soft); // #213547;
 
     // box-shadow: 0 .5rem 1rem #00000026,inset 0 -1px #ffffff26;
@@ -105,7 +112,7 @@ window.onclick = function(event) {
 
     .logo{
         font-weight: 700;
-        color: #fff;
+        color: var(--color-text);
         text-transform: uppercase;
     }
     .menu{
@@ -114,7 +121,7 @@ window.onclick = function(event) {
         align-items: center;
 
         .link{
-            color: #fff;
+            color: var(--color-text);
             font-size: 16px;
             font-weight: 500;
             text-decoration: none;
@@ -124,39 +131,54 @@ window.onclick = function(event) {
     .user{
         text-decoration: underline;
         cursor: pointer;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        width: 40px;
+        height: 40px;
+        background-color: rgba(var(--darkRGB), 0.075);
+        border-radius: 100%;
+
+        svg{
+            width: 24px;
+            height: 24px;
+            fill: var(--color-text);
+        }
     }
 
     .dropdown{
         position: absolute;
-        top: 24px;
+        top: 44px;
         right: 0px;
         width: 200px;
         border-radius: 6px;
-        background-color: #fafbfc;
+        background-color: var(--background);
         overflow: hidden;
-        box-shadow: 0 .5rem 1rem #00000026,inset 0 -1px #ffffff26;
+        box-shadow:  0 .5rem 1rem #00000026, inset 0 -1px #00000026;
 
         .item{
             display: flex;
             align-items: center;
             gap: 10px;
-            padding: 6px 14px 6px 8px;
+            padding: 10px 14px 10px 10px;
             font-size: 14px;
             font-weight: 400;
-            color: var(--black);
+            color: var(--color-text);
 
             &-link{
                 cursor: pointer;
                 & label{ cursor: pointer; }
 
-                &:hover{ background-color: #eee; }
+                &:hover{ background-color: var(--soft-background); }
             }
 
             &-signout{
                 svg{
                     width: 20px;
                     height: 20px;
-                    fill: var(--black);
+                    fill: var(--color-text);
                 }
             }
 

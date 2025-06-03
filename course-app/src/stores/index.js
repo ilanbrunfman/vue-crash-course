@@ -4,10 +4,13 @@ export const useStore = defineStore('store', {
   // data
   state: () => ({
     count: 0,
+    archive: [],
     users: [],
     jobs: [],
     authentication: false,
     toast: false,
+    activeModal: false,
+    modals: [],
   }),
 
   // methods
@@ -21,9 +24,121 @@ export const useStore = defineStore('store', {
       }
     },
 
+    ADD_MODAL(state) {
+        this.modals.push(state)
+        this.activeModal = true
+    }, 
+
+    REMOVE_MODAL(state){
+        this.activeModal = false
+        setTimeout( () => {
+            this.modals.pop()
+        }, 10);
+    },
+
     SET_AUTHENTICATION(value) {
       sessionStorage.setItem('authentication', JSON.stringify(value)) 
       sessionStorage.setItem('user', JSON.stringify(value)) 
+    },
+
+    setToast(toast) {
+      this.toast = toast
+      setTimeout(() => {this.toast = false}, 3000);
+    },
+
+    // Add Archive
+    async addArchive(data) {
+
+      // 1. add data to archive array
+      try {
+        const response = await fetch('/api/archive'  , {
+          method: 'POST',
+          body: JSON.stringify(data),
+          headers: { 'Content-Type': 'application/json' }
+        })
+        if (!response.ok) {
+          // Server returned an error status
+          const errorData = await response.json()
+          console.error('API error:', errorData)
+
+          setTimeout(() => {
+            this.setToast({ type: 'error', message: errorData.message || 'Something went wrong' })
+          }, 100)
+        } else {
+          console.log('Add object to archive successfully', data)
+        }
+      } catch (error) {
+        console.error('Fetch failed:', error)
+
+        setTimeout(() => {
+          this.setToast({ type: 'error', message: 'Network error while saving archive' })
+        }, 100)
+      }
+    },
+
+    // Fetch Archive
+    // Add Archive Users
+    async addArchiveUsers(log) {
+      this.archive.push(log)
+
+      try {
+        const response = await fetch('/api/archiveUsers', {
+          method: 'POST',
+          body: JSON.stringify(log),
+          headers: { 'Content-Type': 'application/json' }
+        })
+
+        if (!response.ok) {
+          // Server returned an error status
+          const errorData = await response.json()
+          console.error('API error:', errorData)
+
+          setTimeout(() => {
+            this.setToast({ type: 'error', message: errorData.message || 'Something went wrong' })
+          }, 100)
+        } else {
+          console.log('Archive added successfully')
+        }
+      } catch (err) {
+        // Network error, timeout, etc.
+        console.error('Fetch failed:', err)
+
+        setTimeout(() => {
+          this.setToast({ type: 'error', message: 'Network error while saving archive' })
+        }, 100)
+      }
+    },
+
+    // Add Archive Jobs
+    async addArchiveJobs(log) {
+      // this.archive.push(log)
+
+      try {
+        const response = await fetch('/api/archiveJobs', {
+          method: 'POST',
+          body: JSON.stringify(log),
+          headers: { 'Content-Type': 'application/json' }
+        })
+
+        if (!response.ok) {
+          // Server returned an error status
+          const errorData = await response.json()
+          console.error('API error:', errorData)
+
+          setTimeout(() => {
+            this.setToast({ type: 'error', message: errorData.message || 'Something went wrong' })
+          }, 100)
+        } else {
+          console.log('Archive added successfully')
+        }
+      } catch (err) {
+        // Network error, timeout, etc.
+        console.error('Fetch failed:', err)
+
+        setTimeout(() => {
+          this.setToast({ type: 'error', message: 'Network error while saving archive' })
+        }, 100)
+      }
     },
 
     // Fetch Users
@@ -31,6 +146,9 @@ export const useStore = defineStore('store', {
       try {
         const response = await fetch('/api/users') // const response = await fetch('http://localhost:5000/users')
         const data = await response.json()
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`)
+        }
         this.users = data
       } catch (error) {
         console.error('Error fetching users list', error);
@@ -51,28 +169,235 @@ export const useStore = defineStore('store', {
       
       if (response.error) {
         console.log(response.error)
-        setTimeout(() => { this.setToast({ type: 'success' }) }, 100);
+        setTimeout(() => { this.setToast({ type: 'error' }) }, 100);
       }
     },
 
-    setToast(toast) {
-      this.toast = toast
-      setTimeout(() => {this.toast = false}, 3000);
+    // Delete User
+    async deleteUser(data) {
+      // 
+      console.log('deleteUser', data)
+      
+      // 1.0 add user to archive
+      this.addArchive(data)
+
+      const currentUser = this.users.find(user => user.id === data.id)
+      console.log('currentUser', currentUser)
+
+      // 1.1 add job associate to user to archive
+      this.jobs
+        .filter(job => job.userId === data.id)
+        .map(job => {
+          const jobData = {
+            type: 'job',
+            active: false,
+            authorId: job.userId,
+            ...job
+          }
+          delete job.userId;
+          this.deleteJob(jobData)
+        })
+
+      // 2.0 delete user from users
+      this.users = this.users.filter((user) => user.id !== data.id)
+      try {
+        const response = await fetch('/api/users/' + data.id, {
+            method: 'DELETE'
+        })
+        if (!response.ok) {
+          // Server returned an error status
+          const errorData = await response.json()
+          console.error('API error:', errorData)
+
+          setTimeout(() => {
+            this.setToast({ type: 'error', message: errorData.message || 'Something went wrong' })
+          }, 100)
+        } else {
+          console.log('User has been deleted successfully', data)
+        }
+      } catch (error) {
+        console.error('Fetch failed:', error)
+
+        setTimeout(() => {
+          this.setToast({ type: 'error', message: 'Network error while saving archive' })
+        }, 100)
+      }
     },
 
+    // Update User
+    async updateUser(data) {
+      console.log('updateUser', data)
+      this.users.map((user) => {
+          if (user.id === data.id) {
+              user.username = data.username
+              user.firstName = data.firstName
+              user.lastName = data.lastName
+              user.email = data.email
+              user.password = data.password
+              user.type = data.type
+          }
+      })
+
+      // try {
+      //   // const response = await fetch(`/api/users/${data.id}`, {
+      //   const response = await fetch(`/api/users/${data.id}`, {
+      //       method: 'PUT',
+      //       body: JSON.stringify(data),
+      //       headers: { 'Content-Type': 'application/json' }
+      //   })
+      //   this.setToast({ type: 'success', message: `${data.firstName}'s account has been updated!` })
+
+      //   if (!response.ok) {
+      //       throw new Error(`HTTP error! status: ${response.status}`)
+      //   }
+      // } catch (error) {
+      //   console.error('Update user function', error);
+      // }
+      
+      try {
+        const response = await fetch(`/api/users/${data.id}`, {
+            method: 'PUT',
+            body: JSON.stringify(data),
+            headers: { 'Content-Type': 'application/json' }
+        })
+
+        if (!response.ok) {
+          // Server returned an error status
+          const errorData = await response.json()
+          console.error('API error:', errorData)
+
+          setTimeout(() => {
+            this.setToast({ type: 'error', message: errorData.message || 'Something went wrong' })
+          }, 100)
+        } else {
+          console.log('Update user successfully')
+        }
+      } catch (err) {
+        // Network error, timeout, etc.
+        console.error('Fetch failed:', err)
+
+        setTimeout(() => {
+          this.setToast({ type: 'error', message: 'Network error while saving users' })
+        }, 100)
+      }
+    },
 
     // Fetch Jobs
     async fetchJobs() {
       try {
         const response = await fetch('/api/jobs') // const response = await fetch('http://localhost:5000/jobs')
         const data = await response.json()
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`)
+        }
         this.jobs = data
       } catch (error) {
         console.error('Error fetching jobs list', error);
       }
     },
-    
 
+    // Add Job
+    async addJob(job) {
+      console.log('addJob', job)
+      this.jobs.push(job)
+    
+      try {
+        const response = await fetch('/api/jobs', {
+          method: 'POST',
+          body: JSON.stringify(job),
+          headers: { 'Content-Type': 'application/json' }
+        })
+        if (!response.ok) {
+          // Server returned an error status
+          const errorData = await response.json()
+          console.error('API error:', errorData)
+
+          setTimeout(() => {
+            this.setToast({ type: 'error', message: errorData.message || 'Something went wrong' })
+          }, 100)
+        } else {
+          console.log('Update user successfully')
+          setTimeout(() => { this.setToast({ type: 'success', message: `Added job successfully` }) }, 100);
+        }
+      } catch (error) {
+        // Network error, timeout, etc.
+        console.error('Fetch failed:', err)
+
+        setTimeout(() => {
+          this.setToast({ type: 'error', message: 'Network error while saving users' })
+        }, 100)
+      }
+    },
+
+    // deleteJob
+    async deleteJob(job) {    
+      
+      const data = {
+          type: 'job',
+          active: false,
+          authorId: job.userId,
+          ...job,
+      }
+      delete data.userId;
+      // 1. add job to archive
+      this.addArchive(data)
+
+      // 2. remove job from jobs
+      this.jobs = this.jobs.filter((job) => job.id !== data.id)
+      try {
+        const response = await fetch('/api/jobs/' + data.id, {
+            method: 'DELETE'
+        })
+        if (!response.ok) {
+          // Server returned an error status
+          const errorData = await response.json()
+          console.error('API error:', errorData)
+
+          setTimeout(() => {
+            this.setToast({ type: 'error', message: errorData.message || 'Something went wrong' })
+          }, 100)
+        } else {
+          console.log('Job has been deleted successfully', data)
+        }
+      } catch (error) {
+        console.error('Fetch failed:', error)
+
+        setTimeout(() => {
+          this.setToast({ type: 'error', message: 'Network error while saving archive' })
+        }, 100)
+      }
+    },
+
+    // Update Job
+    async updateJob(data) {
+      console.log('updateJob', data)
+      this.jobs.map((job) => {
+          if (job.id === data.id) {
+            job.id = data.id
+            job.userId = data.userId
+            job.title = data.title
+            job.description = data.description
+          }
+      })
+      console.log('updated job', this.jobs)
+
+      try {
+        const response = await fetch(`/api/jobs/${data.id}`, {
+            method: 'PUT',
+            body: JSON.stringify(data),
+            headers: { 'Content-Type': 'application/json' }
+        })
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`)
+        } else {
+          this.setToast({type: 'success', title: 'Success!', message: `Updated job successfully`})
+        }
+      } catch (error) {
+        console.error('Update user function', error);
+      }
+    },
+    
   },
 
   // computed

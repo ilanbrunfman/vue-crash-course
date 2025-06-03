@@ -1,23 +1,31 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useStore } from '@/stores/index.js';
 
 const router = useRouter()
 const store = useStore()
-const users = computed(() => { return store.users })
 
 
 const firstName = ref('')
 const lastName = ref('')
 const email = ref('')
 const password = ref('')
-const error = ref({ active: false, message: ''})
-const duplicateUser = ref(false)
+const error = ref({ 
+    active: false, 
+    field: {
+        firstName: '',
+        lastName: '',
+        email: '',
+        password: ''
+    },
+})
+const duplicate = ref([])
 
 const onSubmit = () => {
     const data = {
         id: Math.floor(Math.random() * 10000).toString().padStart(4, '0'),
+        username: `${firstName.value.toLocaleLowerCase()}-${lastName.value.toLocaleLowerCase()}`,
         firstName: firstName.value,
         lastName: lastName.value,
         email: email.value,
@@ -25,20 +33,14 @@ const onSubmit = () => {
         type: 'user',
     }
 
+    duplicate.value = store.users.filter(user => user.email === email.value)
     
-    store.users.map(user => {
-        user.email === data.email ? duplicateUser.value = true : duplicateUser.value = false
-    })
 
-    if( firstName.value && lastName.value && email.value && password.value ){
-        if(!duplicateUser.value) {
-            store.addUser(data)
-    
-            store.SET_AUTHENTICATION({active: true, type: 'user', user: data})
-            router.push('/')
-        } else {
-            errorValidation()
-        }
+    if( firstName.value && lastName.value && email.value && duplicate.value.length == 0 && password.value && !error.value.active ){
+        store.addUser(data)
+
+        store.SET_AUTHENTICATION({active: true, type: 'user', user: data})
+        router.push('/')
     } else {
         errorValidation()
     }
@@ -48,9 +50,42 @@ const onSubmit = () => {
 
 const errorValidation = () => {
     error.value.active = true
-    error.value.message = duplicateUser.value ? 'This address is already used' : 'The email or password you entered is incorrect'
+
+    // firstName
+    if( !firstName.value ) {
+        error.value.field.firstName = 'Please enter first mame'
+    } else {
+        error.value.field.firstName = ''
+    }
+
+    // lastName
+    if ( !lastName.value ) {
+        error.value.field.lastName = 'Please enter last name'
+    } else {
+        error.value.field.lastName = ''
+    }
+
+    // email
+    if ( !email.value ) {
+        error.value.field.email = 'Please enter email address'
+    } else if ( !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value) ){
+        error.value.field.email = 'Invalid email format.'
+    } else if ( email.value && duplicate.value.length > 0 ) {
+        error.value.field.email = 'This address is already used'
+    } else {
+        error.value.field.email = ''
+    }
+
+    // password
+    if ( !password.value ) {
+        error.value.field.password = 'Please enter password'
+    } else {
+        error.value.field.password = ''
+    }
+
     setTimeout(() => {error.value.active = false}, 3000);
 }
+
 </script>
 
 <template>
@@ -72,6 +107,7 @@ const errorValidation = () => {
                                         placeholder="First Name"
                                         v-model="firstName"
                                     />
+                                    <span v-if="error.active && error.field.firstName" class="error-output">{{ error.field.firstName }}</span>
                                 </div>
                                 <div class="form-control">
                                     <label>Last Name</label>
@@ -81,6 +117,7 @@ const errorValidation = () => {
                                         placeholder="Last Name"
                                         v-model="lastName"
                                     />
+                                     <span v-if="error.active && error.field.lastName" class="error-output">{{ error.field.lastName }}</span>
                                 </div>
                                 <div class="form-control">
                                     <label>Email</label>
@@ -90,16 +127,17 @@ const errorValidation = () => {
                                         placeholder="Email"
                                         v-model="email"
                                     />
+                                    <span v-if="error.active && error.field.email" class="error-output">{{ error.field.email }}</span>
                                 </div>
                                 <div class="form-control">
                                     <label>Password</label>
                                     <input 
-                                        type="text"
+                                        type="password"
                                         id="password"
                                         placeholder="Password"
                                         v-model="password"
                                     />
-                                    <span v-if="error.active" class="error-output">{{ error.message }}</span>
+                                    <span v-if="error.active && error.field.password" class="error-output">{{ error.field.password }}</span>
                                 </div>
                                 <div class="form-control">
                                     <button @click="onSubmit" type="submit" class="btn btn-primary">Sign In</button>
@@ -166,6 +204,7 @@ section{
                 font-weight: 600;
                 line-height: 1.0;
                 margin-bottom: 6px;
+                padding-left: 4px;
             }
 
             input{

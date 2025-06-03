@@ -1,27 +1,8 @@
 @use "variables" as var;
 
 :root{
-    --vt-c-white: #ffffff;
-    --vt-c-white-soft: #f8f8f8;
-    --vt-c-white-mute: #f2f2f2;
-
-    --vt-c-black: #181818;
-    --vt-c-black-soft: #222222;
-    --vt-c-black-mute: #282828;
-
-    --vt-c-indigo: #2c3e50;
-
-    --vt-c-divider-light-1: rgba(60, 60, 60, 0.29);
-    --vt-c-divider-light-2: rgba(60, 60, 60, 0.12);
-    --vt-c-divider-dark-1: rgba(84, 84, 84, 0.65);
-    --vt-c-divider-dark-2: rgba(84, 84, 84, 0.48);
-
-    --vt-c-text-light-1: var(--vt-c-indigo);
-    --vt-c-text-light-2: rgba(60, 60, 60, 0.66);
-    --vt-c-text-dark-1: var(--vt-c-white);
-    --vt-c-text-dark-2: rgba(235, 235, 235, 0.64);
-
     --background: #1c1c1d;
+    --backgroundRGB: 28, 28, 29;
     --soft-background: #181818;
     --light: #181818;
     --dark: #f4f6f9;
@@ -35,10 +16,12 @@
 @media (prefers-color-scheme: light) { 
     :root {
         --background: #ffffff;
+        --backgroundRGB: #255,255,255;
         --soft-background: #f2f4f7;
 
         --light: #f4f6f9;
         --dark: #181818;
+        --darkRGB: 24, 24, 24;
         --copy: #a7abaf;
         // --white-background: #fafbfc;
         --color-text: #212529;
@@ -55,6 +38,10 @@
     margin: 0;
     padding: 0;
     font-weight: normal;
+    text-decoration: none;
+    list-style: none;
+    resize: none;
+    line-height: 1.0;
 }
 
 body {
@@ -89,19 +76,51 @@ button{
     background-color: transparent;
     outline: none;
     border: none;
+    
 }
 
-.title{
-    font-size: clamp(24px, -0.875rem + 8.333vw, 44px);
-}
-.sub-title{
-    font-size: clamp(16px, -0.875rem + 8.333vw, 24px);
+a{ cursor: pointer; }
+
+// .select-none{
+//        user-select: none;
+//       -webkit-tab-highlight-color: rgba(0,0,0,0);
+//       -webkit-tab-highlight-color: transparent;
+
+//       -webkit-user-select: none;
+//       -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+//       -webkit-font-smoothing: antialiased;
+// }
+
+
+.title{ font-size: clamp(24px, -0.875rem + 8.333vw, 44px); }
+.sub-title{ font-size: clamp(16px, -0.875rem + 8.333vw, 24px); }
+.para{ font-size: clamp(4px, -0.875rem + 8.333vw, 16px); }
+
+.btn{
+    display: flex;
+    padding: 10px 16px;
+    // background-color: #0070d9;
+    border-radius: 4px;
+    outline: none;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+
+    &-primary{
+        background-color: #0070d9;
+         &:hover{ background-color: rgba(#0070d9, 0.8); }
+    }
+    &-defualt{
+        background-color: #6c757d;
+        &:hover{ background-color: rgba(#6c757d, 0.8); }
+    }
 }
 
 .position{
     &-relative{ position: relative; }
     &-absolute{ position: absolute; }
     &-fixed{ position: fixed; }
+    &-sticky{ position: sticky;}
 }
 
 .container{
@@ -120,6 +139,10 @@ button{
 
 }
 
+.clr{
+    &-copy{ color: var(--copy); }
+}
+
 .fw{
     &-bold{ font-weight: bold; } 
     &-700{ font-weight: 700; } 
@@ -131,29 +154,36 @@ button{
     &-100{ font-weight: 100; }
 }
 .fs{
-    &-32{ font-size: 32px; }
-    &-31{ font-size: 31px; }
-    &-30{ font-size: 30px; }
-    &-29{ font-size: 29px; }
-    &-28{ font-size: 28px; }
-    &-27{ font-size: 27px; }
-    &-26{ font-size: 26px; }
-    &-25{ font-size: 25px; }
-    &-24{ font-size: 24px; }
-    &-23{ font-size: 23px; }
-    &-22{ font-size: 22px; }
-    &-21{ font-size: 21px; }
-    &-20{ font-size: 20px; }
-    &-19{ font-size: 19px; }
-    &-18{ font-size: 18px; }
-    &-17{ font-size: 17px; }
-    &-16{ font-size: 16px; }
-    &-15{ font-size: 15px; }
-    &-14{ font-size: 14px; }
-    &-13{ font-size: 13px; }
-    &-12{ font-size: 12px; }
-    &-11{ font-size: 11px; }
-    &-10{ font-size: 10px; }
+    @mixin font-size{
+        &-32{ font-size: 32px; }
+        &-31{ font-size: 31px; }
+        &-30{ font-size: 30px; }
+        &-29{ font-size: 29px; }
+        &-28{ font-size: 28px; }
+        &-27{ font-size: 27px; }
+        &-26{ font-size: 26px; }
+        &-25{ font-size: 25px; }
+        &-24{ font-size: 24px; }
+        &-23{ font-size: 23px; }
+        &-22{ font-size: 22px; }
+        &-21{ font-size: 21px; }
+        &-20{ font-size: 20px; }
+        &-19{ font-size: 19px; }
+        &-18{ font-size: 18px; }
+        &-17{ font-size: 17px; }
+        &-16{ font-size: 16px; }
+        &-15{ font-size: 15px; }
+        &-14{ font-size: 14px; }
+        &-13{ font-size: 13px; }
+        &-12{ font-size: 12px; }
+        &-11{ font-size: 11px; }
+        &-10{ font-size: 10px; }
+    }
+    @media (min-width: var.$xsm) { @include font-size }
+    @media (min-width: var.$sm) { &-sm { @include font-size } }
+    @media (min-width: var.$md) { &-md { @include font-size } }
+    @media (min-width: var.$lg) { &-lg { @include font-size } }
+    @media (min-width: var.$xl) { &-xl { @include font-size } }
 }
 
 .text {
@@ -164,6 +194,8 @@ button{
         &-right{ text-align: right; } 
         &-end { text-align: right; }
         &-underline{ text-decoration: underline;}
+        &-uppercase{ text-transform: uppercase ;}
+        &-capitalize{ text-transform: capitalize ;}
     }
     @media (min-width: var.$xsm) { @include text-align }
     @media (min-width: var.$sm) { &-sm { @include text-align } }
@@ -191,9 +223,16 @@ button{
     @mixin grid-columns{
         &-1 { grid-template-columns: repeat(1, 1fr); } 
         &-2 { grid-template-columns: repeat(2, 1fr); } 
-        &-3 { grid-template-columns: repeat(3, 1fr); } 
-        &-4 { grid-template-columns: repeat(4, 1fr); } 
-        &-5 { grid-template-columns: repeat(5, 1fr); } 
+        &-3 { grid-template-columns: repeat(3, 1fr); 
+            &-6-3 { grid-template-columns: 3fr 6r 3fr; }
+            &-9 { grid-template-columns: 3fr 9fr; }
+        } 
+        &-4 { grid-template-columns: repeat(4, 1fr);
+            &-8 { grid-template-columns: 4fr 8fr; }
+        } 
+        &-5 { grid-template-columns: repeat(5, 1fr); 
+            &-7 { grid-template-columns: 5fr 7fr; }
+        } 
         &-6 { grid-template-columns: repeat(6, 1fr); } 
         &-7 { grid-template-columns: repeat(7, 1fr); 
             &-5 { grid-template-columns: 7fr 5fr;} 
@@ -235,6 +274,10 @@ button{
     @media (min-width: var.$md) { &-md { @include columns } }
     @media (min-width: var.$lg) { &-lg { @include columns } }
     @media (min-width: var.$xl) { &-xl { @include columns } }
+}
+
+.w{
+    &-100{ width: 100%;}
 }
 
 .justify{
@@ -424,6 +467,7 @@ button{
 .pt{ 
     @mixin padding-top{
         &-0{ padding-top: 0; } 
+        &-0-5{ padding-top: 0.5rem; } 
         &-1{ padding-top: 1.0rem; } 
         &-2{ padding-top: 2.0rem; } 
         &-3{ padding-top: 3.0rem; } 
@@ -441,6 +485,7 @@ button{
 .pr{ 
     @mixin padding-right{
         &-0{ padding-right: 0; } 
+        &-0-5{ padding-right: 0.5rem; } 
         &-1{ padding-right: 1.0rem; } 
         &-2{ padding-right: 2.0rem; } 
         &-3{ padding-right: 3.0rem; } 
@@ -458,6 +503,7 @@ button{
 .pb{ 
     @mixin padding-bottom{
         &-0{ padding-bottom: 0; } 
+        &-0-5{ padding-bottom: 0.5rem; } 
         &-1{ padding-bottom: 1.0rem; } 
         &-2{ padding-bottom: 2.0rem; } 
         &-3{ padding-bottom: 3.0rem; } 
@@ -475,6 +521,7 @@ button{
 .pl{ 
     @mixin padding-left{
         &-0{ padding-left: 0; } 
+        &-0-5{ padding-left: 0.5rem; } 
         &-1{ padding-left: 1.0rem; } 
         &-2{ padding-left: 2.0rem; } 
         &-3{ padding-left: 3.0rem; } 

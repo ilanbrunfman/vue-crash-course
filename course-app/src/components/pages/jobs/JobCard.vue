@@ -1,7 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue';
 
-//
 import IconMapPin from '@/components/icons/IconMapPin.vue';
 
 const props = defineProps({
@@ -26,13 +25,7 @@ const toggleFullDescription = () => {
     <div class="job">
         <p class="job-type fw-500">{{ job.type }}</p>
         <h2 class="job-title">{{ job.title }}</h2>
-        <div class="job-description fw-400 mb-0-5 ">
-            <p class=" ">{{ truncatedDescription }}</p>
-            <!-- <span 
-                @click="toggleFullDescription" 
-                :class="['fw-400', showFullDescription ? '' : 'clr-green-400']"
-            >{{ showFullDescription ? 'Less' : 'More' }}</span> -->
-        </div>
+        <p class="job-description fw-400 mb-0-5">{{ truncatedDescription }}</p>
         <p class="job-salary fw-500 clr-green-400 mb-1">{{ job.salary }} / Year</p>
         <hr class="mb-1"/>
         <div class="job-location mb-1">
@@ -67,15 +60,14 @@ const toggleFullDescription = () => {
         display: flex;
         align-items: center;
         gap: 6px;
-        color: var(--color-text);
-        // color: #B71C1C;
+        // color: var(--color-text);
+        color: #B71C1C;
 
         svg{
             width: 20px;
-            height:var(--color-text);
-            // height: 20px;
-            fill: var(--color-text);
-            // fill: #B71C1C;
+            height: 20px;
+            // fill: var(--color-text);
+            fill: #B71C1C;
         }
     }
 

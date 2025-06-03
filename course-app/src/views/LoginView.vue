@@ -5,11 +5,17 @@ import { useStore } from '@/stores/index.js'
 
 const router = useRouter()
 const store = useStore()
-const users = computed(() => { return store.users })
+
 const email = ref('')
 const password = ref('')
 const currentUser = ref([])
-const error = ref({active: false, message: ''})
+const error = ref({ 
+    active: false, 
+    field: {
+        email: '',
+        password: ''
+    },
+})
 
 const onSubmit = () => {
     
@@ -18,33 +24,56 @@ const onSubmit = () => {
         password: password.value
     }
 
-    if( email.value && password.value ){
+    
+    if( email.value && password.value && !error.value.active ) {
+        
         currentUser.value = store.users.filter(user => user.email.toLowerCase().includes(data.email) && user.password === data.password)
         
         if(currentUser.value.length > 0){
             const value = currentUser.value.find(user => { return user })
-            store.SET_AUTHENTICATION({active: true, type: value.type, user: currentUser.value.find(user => user)})
+            store.SET_AUTHENTICATION({
+                active: true, 
+                type: value.type, 
+                user: value, 
+            })
             router.push('/')
-            // console.log(store.authentication)
             setTimeout(() => { 
-                store.setToast({ 
-                    type: 'success', 
-                    // title: 'Logged in',
-                    message: `Welcome back ${value.firstName}` 
-                }) 
+                store.setToast({ type: 'success', message: `Welcome back ${value.firstName}` }) 
             }, 100);
         } 
         else {
            errorValidation() 
         }
+
     } else {
         errorValidation()
     }
 }
 
+
 const errorValidation = () => {
     error.value.active = true
-    error.value.message= 'The email or password you entered is incorrect'
+
+    // email
+    if ( !email.value ) {
+        error.value.field.email = 'Please enter email address'
+    } else if ( !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value) ){
+        error.value.field.email = 'Invalid email format'
+    } else if( store.users.filter((user) => user.email.includes(email.value)).length < 1) {
+       error.value.field.email = `User email doesn't exist`
+    } else {
+        error.value.field.email = ''
+    }
+
+    // password
+    if ( !password.value ) {
+        error.value.field.password = 'Please enter password'
+    } else if (password.value !== currentUser.value.password) {
+        error.value.field.password = 'Password is incorrect' 
+    } else {
+        error.value.field.password = ''
+    }
+
     setTimeout(() => {error.value.active = false}, 3000);
 }
 
@@ -69,6 +98,7 @@ const errorValidation = () => {
                                         placeholder="Email"
                                         v-model="email"
                                     />
+                                    <span v-if="error.active && error.field.email" class="error-output">{{ error.field.email }}</span>
                                 </div>
                                 <div class="form-control">
                                     <label>Password</label>
@@ -78,7 +108,7 @@ const errorValidation = () => {
                                         placeholder="Password"
                                         v-model="password"
                                     />
-                                    <span v-if="error.active" class="error-output">{{ error.message }}</span>
+                                    <span v-if="error.active && error.field.password" class="error-output">{{ error.field.password }}</span>
                                 </div>
                                 
                                 <div class="form-control">
@@ -147,6 +177,7 @@ section{
                 font-weight: 600;
                 line-height: 1.0;
                 margin-bottom: 6px;
+                padding-left: 4px;
             }
 
             input{

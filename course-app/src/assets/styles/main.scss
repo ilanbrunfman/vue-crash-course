@@ -1,3 +1,5 @@
 @use "./partials/base";
 @use "./partials/color-palettes";
-@use "./partials/transition";
+@use "./partials/animation";
+
+@use "./shared/modals.scss";

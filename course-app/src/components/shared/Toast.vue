@@ -119,6 +119,7 @@ const closeToast = () => {
 
         &-message{
             font-size: 500;
+            line-height: 1.2;
         }
     }
 

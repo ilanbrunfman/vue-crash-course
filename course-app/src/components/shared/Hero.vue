@@ -11,7 +11,7 @@ defineProps({
     <section :class="['hero', `hero-${layout}`]">
         <div class="container mx-auto">
             <div class="content">
-                <h1 class="title fw-bold">{{ title }}</h1>
+                <h1 class="title fw-bold mb-1">{{ title }}</h1>
                 <h3 class="sub-title fw-600">{{ subTitle }}</h3>
             </div>
         </div>
@@ -23,6 +23,7 @@ defineProps({
     position: relative;
     width: 100%;
     background-color: #7E57C2;
+    padding-top: 8.4rem;
 
     &.dark{
         .title{

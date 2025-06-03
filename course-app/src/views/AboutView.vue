@@ -10,8 +10,8 @@ import Wrapper from '@/components/shared/Wrapper.vue'
         <template #main>
             
             <section>
-                <div class="row">
-                    <div class="col">
+                <div class="container mx-auto">
+                    <div class="row pt-6">
                         <h1>About page</h1>
                     </div>
                 </div>

@@ -9,8 +9,8 @@ defineProps({
 
 <template>
     <section>
-        <div class="row">
-            <div class="container mx-auto py-4">
+        <div class="container mx-auto">
+            <div class="row pt-0 pb-4">
                 <div :class="['d-grid grid', grid]">
                     <JobCard v-for="(job, index) in jobs" :key="index" :job="job"/>
                 </div>
@@ -19,8 +19,4 @@ defineProps({
     </section>
 </template>
 
-<style lang="scss" scoped>
-section{
-    // background-color: #E3F2FD;
-}
-</style>
+<style lang="scss" scoped></style>
