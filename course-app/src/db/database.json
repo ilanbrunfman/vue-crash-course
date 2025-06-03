@@ -1,0 +1,117 @@
+{
+  "archive": [
+    {
+      "id": "6431",
+      "type": "job",
+      "active": true,
+      "authorId": "1801",
+      "title": "I love you",
+      "description": "so so much"
+    },
+    {
+      "id": "0796",
+      "type": "job",
+      "active": true,
+      "authorId": "0035",
+      "title": "new job",
+      "description": "nice job"
+    },
+    {
+      "id": "1154",
+      "type": "job",
+      "active": true,
+      "authorId": "0035",
+      "title": "testing",
+      "description": "good job"
+    },
+    {
+      "id": "9705",
+      "type": "job",
+      "active": true,
+      "authorId": "0035",
+      "title": "kldsflkds",
+      "description": "1234 asdf"
+    },
+    {
+      "id": "6743",
+      "type": "job",
+      "active": true,
+      "authorId": "0035",
+      "title": "09124214",
+      "description": "dsdadas asdasd"
+    }
+  ],
+  "users": [
+    {
+      "id": "0035",
+      "username": "ilan-brunfman",
+      "firstName": "Ilan",
+      "lastName": "Brunfman",
+      "email": "ilanbrunfman@gmail.com",
+      "password": "1234",
+      "type": "admin"
+    },
+    {
+      "id": "9444",
+      "username": "chen-brunfman",
+      "firstName": "Chen",
+      "lastName": "Brunfman",
+      "email": "chenbrunfman@gmail.com",
+      "password": "1234",
+      "type": "user"
+    },
+    {
+      "id": "0714",
+      "username": "gilad-brunfman",
+      "firstName": "Gilad",
+      "lastName": "Brunfman",
+      "email": "giladbrunfman@gmail.com",
+      "password": "4321",
+      "type": "user"
+    },
+    {
+      "id": "1801",
+      "username": "natasha-boyer",
+      "firstName": "Natasha",
+      "lastName": "Boyer",
+      "email": "natashaboyerpt@gmail.com",
+      "password": "1234",
+      "type": "user"
+    },
+    {
+      "id": "7369",
+      "username": "alex-brunfman",
+      "firstName": "Alex",
+      "lastName": "Brunfman",
+      "email": "alexbrunfman@gmail.com",
+      "password": "1234",
+      "type": "user"
+    }
+  ],
+  "jobs": [
+    {
+      "id": "abcd",
+      "userId": "0035",
+      "title": "Senior Vue Dev",
+      "description": "Description text goes here"
+    },
+    {
+      "id": "qwer",
+      "userId": "0714",
+      "title": "Front-End Engineer (Vue)",
+      "description": "Description text goes here"
+    },
+    {
+      "id": "poiu",
+      "userId": "0714",
+      "title": "Vue.js Developer",
+      "description": "Description text goes here or now where"
+    },
+    {
+      "id": "8350",
+      "userId": "0714",
+      "title": "new test",
+      "description": "home work"
+    }
+  ]
+}
