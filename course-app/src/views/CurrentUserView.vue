@@ -5,6 +5,7 @@ import { useStore } from '@/stores/index.js'
 
 import Wrapper from '@/components/shared/Wrapper.vue';
 import EditUserModal from '@/components/pages/users/EditUserModal.vue';
+import DeleteUserModal from '@/components/pages/users/DeleteUserModal.vue';
 import AddJobModal from '@/components/pages/jobs/AddJobModal.vue';
 import EditJobModal from '@/components/pages/jobs/EditJobModal.vue';
 import IconHorizontalDots from '@/components/icons/IconHorizontalDots.vue';
@@ -15,9 +16,11 @@ const route = useRoute()
 const router = useRouter()
 const store = useStore()
 
-const user =  computed(() => {
-    return store.users.find((user) => user.username === route.params.username) 
-})
+// const user =  computed(() => {
+//     return store.users.find((user) => user.username === route.params.username) 
+// })
+const user = ref( store.users.find((user) => user.username === route.params.username) )
+
 
 const jobs = ref([])
 const activeJobId = ref(null)
@@ -40,8 +43,9 @@ const editUserModal = () => {
 
 const deleteUser = () => {
     if(user.value.type !== 'admin'){
-        store.deleteUser(user.value)
-        router.push('/login')
+        store.ADD_MODAL({ component: markRaw(DeleteUserModal), data: user.value})
+        // store.deleteUser(user.value)
+        // router.push('/login')
     } else {
         setTimeout(() => { store.setToast({ type: 'error', title: ``, message: 'Cannot delete Admin account' }) }, 100);
     }
@@ -88,6 +92,33 @@ function deleteJob(job) {
     }
 }
 
+const followers = ref([])
+
+onMounted( async () => {
+    await store.fetchUsers() // make sure this completes
+    const currentUser = store.getUser.user
+
+    followers.value = store.users
+        .filter(user => 
+            user.email !== currentUser.email && // don't include self
+            currentUser.following.includes(user.email) // exclude already followed)
+        )
+        .map(user => ({
+            ...user,
+            isFollow: true // local follow flag
+        })) 
+}) 
+
+const toggleFollow = (follower) => {
+    follower.isFollow = !follower.isFollow
+
+    if (follower.isFollow) {
+        store.followUser(follower.email)
+    } else {
+        store.unfollowUser(follower.email)
+    }
+}
+
 </script>
 
 <template>
@@ -97,54 +128,75 @@ function deleteJob(job) {
                 <div class="row d-grid gap-2 grid-1 grid-md-5-7">
                         
                     <div class="col">
-                        <div class="card">
-                            <div class="card-header">
-                                <h2 class="sub-title fw-700 text-capitalize">Intro</h2>
-                            </div>
-                            <div class="card-body">
-                                <div v-if="user" :class="['profile', `profile-${user.type}`]">
-                                    <div class="row mb-1">
-                                        <div class="d-flex align-items-center ">
-                                                <label>First name:</label>
-                                            <p class="">{{ user.firstName }}</p>
-                                        </div>
-                                    </div>
-                                    <div class="row mb-1">
-                                        <div class="d-flex align-items-center ">
-                                                <label>Last name:</label>
-                                            <p class="">{{ user.lastName }}</p>
-                                        </div>
-                                    </div>
-                                    <div class="row mb-1">
-                                        <div class="d-flex align-items-center ">
-                                            <label>Type:</label>
-                                            <div :class="['bubble', `bubble-${user.type}`]">
-                                                <p class="profile-type">{{ user.type }}</p>
+                        <div class="row">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h2 class="sub-title fw-700 text-capitalize">Intro - current user</h2>
+                                </div>
+                                <div class="card-body">
+                                    <div v-if="user" :class="['profile', `profile-${user.type}`]">
+                                        <div class="row mb-1">
+                                            <div class="d-flex align-items-center ">
+                                                    <label>First name:</label>
+                                                <p class="">{{ user.firstName }}</p>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="row mb-1">
-                                        <div class="d-flex align-items-center ">
-                                                <label>Email:</label>
-                                            <p class="">{{ user.email }}</p>
+                                        <div class="row mb-1">
+                                            <div class="d-flex align-items-center ">
+                                                    <label>Last name:</label>
+                                                <p class="">{{ user.lastName }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-1">
+                                            <div class="d-flex align-items-center ">
+                                                <label>Type:</label>
+                                                <div :class="['bubble', `bubble-${user.type}`]">
+                                                    <p class="profile-type">{{ user.type }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-1">
+                                            <div class="d-flex align-items-center ">
+                                                    <label>Email:</label>
+                                                <p class="">{{ user.email }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-1 pb-0-5">
+                                            <div class="d-flex align-items-center ">
+                                                <label>Passowrd:</label>
+                                                <p class="">
+                                                    <span class="" v-for="(item, i) in user.password.length" :key="i" >&bull;</span>
+                                                </p>
+                                            </div>
+                                        </div>
+    
+                                        <div class="row d-flex gap-1">
+    
+                                            <button class="btn btn-primary fw-bold fs-14" @click="editUserModal">Edit Profile</button>
+                                            <button class="btn btn-defualt fw-bold fs-14" @click="deleteUser">Delete User</button>
                                         </div>
                                     </div>
-                                    <div class="row mb-1 pb-0-5">
-                                        <div class="d-flex align-items-center ">
-                                            <label>Passowrd:</label>
-                                            <p class="">
-                                                <span class="" v-for="(item, i) in user.password.length" :key="i" >&bull;</span>
-                                            </p>
-                                        </div>
-                                    </div>
-
-                                    <div class="row d-flex gap-1">
-
-                                        <button class="btn btn-primary fw-bold fs-14" @click="editUserModal">Edit Profile</button>
-                                        <button class="btn btn-defualt fw-bold fs-14" @click="deleteUser">Delete User</button>
-                                    </div>
+                                    <p v-else>Profile is loading..</p>
                                 </div>
-                                <p v-else>Profile is loading..</p>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h2 class="sub-title fw-700 text-capitalize">Friends</h2>
+                                </div>
+                                <div class="card-body">
+                                    <template v-if="user.following.length > 0">
+                                        <div v-for="(follower, index) in followers" :key="index" class="card-follower d-flex align-items-center justify-between">
+                                            <h3 class="fw-600">{{ follower.firstName }} {{ follower.lastName }}</h3>
+                                            <button :class="['btn fw-700 justify-center', follower.isFollow ? 'btn-primary' : 'btn-primary']" @click="toggleFollow(follower)">
+                                                {{ follower.isFollow ? 'Follow' : 'Following' }}
+                                            </button>
+                                        </div>
+                                    </template>
+                                    <p v-else>List is empty..</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -256,6 +308,12 @@ function deleteJob(job) {
     &-body{
         padding: 20px;
         padding-top: 0px;
+    }
+
+    &-follower{
+        margin-bottom: 1.0rem;
+
+        &:last-child{ margin-bottom: 0; }
     }
 }
 .profile{

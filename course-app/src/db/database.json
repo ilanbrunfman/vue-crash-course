@@ -39,6 +39,52 @@
       "authorId": "0035",
       "title": "09124214",
       "description": "dsdadas asdasd"
+    },
+    {
+      "id": "7369",
+      "username": "alex-brunfman",
+      "firstName": "Alex",
+      "lastName": "Brunfman",
+      "email": "alexbrunfman@gmail.com",
+      "password": "1234",
+      "type": "user"
+    },
+    {
+      "id": "3310",
+      "username": "alex2-brunfman",
+      "firstName": "Alex2",
+      "lastName": "Brunfman",
+      "email": "alexbrunfman@gmail.com",
+      "password": "1234",
+      "type": "user"
+    },
+    {
+      "id": "9058",
+      "username": "alex2-brunfman",
+      "firstName": "Alex2",
+      "lastName": "Brunfman",
+      "email": "alexbrunfman@gmail.com",
+      "password": "1234",
+      "type": "user"
+    },
+    {
+      "id": "5380",
+      "username": "alex2-brunfman",
+      "firstName": "Alex2",
+      "lastName": "Brunfman",
+      "email": "alexbrunfman@gmail.com",
+      "password": "1234",
+      "type": "user"
+    },
+    {
+      "id": "6919",
+      "username": "test-one",
+      "firstName": "test",
+      "lastName": "one",
+      "email": "test@gmail.com",
+      "password": "test",
+      "type": "user",
+      "following": []
     }
   ],
   "users": [
@@ -49,7 +95,8 @@
       "lastName": "Brunfman",
       "email": "ilanbrunfman@gmail.com",
       "password": "1234",
-      "type": "admin"
+      "type": "admin",
+      "following": []
     },
     {
       "id": "9444",
@@ -58,7 +105,10 @@
       "lastName": "Brunfman",
       "email": "chenbrunfman@gmail.com",
       "password": "1234",
-      "type": "user"
+      "type": "user",
+      "following": [
+        "ilanbrunfman@gmail.com"
+      ]
     },
     {
       "id": "0714",
@@ -67,7 +117,10 @@
       "lastName": "Brunfman",
       "email": "giladbrunfman@gmail.com",
       "password": "4321",
-      "type": "user"
+      "type": "user",
+      "following": [
+        "ilanbrunfman@gmail.com"
+      ]
     },
     {
       "id": "1801",
@@ -76,16 +129,10 @@
       "lastName": "Boyer",
       "email": "natashaboyerpt@gmail.com",
       "password": "1234",
-      "type": "user"
-    },
-    {
-      "id": "7369",
-      "username": "alex-brunfman",
-      "firstName": "Alex",
-      "lastName": "Brunfman",
-      "email": "alexbrunfman@gmail.com",
-      "password": "1234",
-      "type": "user"
+      "type": "user",
+      "following": [
+        "ilanbrunfman@gmail.com"
+      ]
     }
   ],
   "jobs": [
@@ -112,6 +159,12 @@
       "userId": "0714",
       "title": "new test",
       "description": "home work"
+    },
+    {
+      "id": "5285",
+      "userId": "1801",
+      "title": "Alice in the wonderland",
+      "description": "Looking for a white rabbit!"
     }
   ]
 }

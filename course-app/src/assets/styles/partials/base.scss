@@ -6,6 +6,7 @@
     --soft-background: #181818;
     --light: #181818;
     --dark: #f4f6f9;
+    --darkRGB: 244, 246, 249;
     --copy: #212529;
 
     --color-text: #dee2e6;
@@ -111,8 +112,9 @@ a{ cursor: pointer; }
          &:hover{ background-color: rgba(#0070d9, 0.8); }
     }
     &-defualt{
-        background-color: #6c757d;
-        &:hover{ background-color: rgba(#6c757d, 0.8); }
+        // background-color: #6c757d;
+        background-color: rgba(var(--darkRGB), 0.475);
+        &:hover{ background-color: rgba(var(--darkRGB), 0.575); }
     }
 }
 
@@ -141,6 +143,7 @@ a{ cursor: pointer; }
 
 .clr{
     &-copy{ color: var(--copy); }
+    &-white{ color: var(--dark); }
 }
 
 .fw{

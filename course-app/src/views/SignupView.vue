@@ -31,6 +31,7 @@ const onSubmit = () => {
         email: email.value,
         password: password.value,
         type: 'user',
+        following: [],
     }
 
     duplicate.value = store.users.filter(user => user.email === email.value)

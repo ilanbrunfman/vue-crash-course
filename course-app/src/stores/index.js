@@ -6,8 +6,10 @@ export const useStore = defineStore('store', {
     count: 0,
     archive: [],
     users: [],
+    userFollowers: [],
     jobs: [],
-    authentication: false,
+    authentication: JSON.parse(sessionStorage.getItem('authentication')) || null,
+    // authentication: false,
     toast: false,
     activeModal: false,
     modals: [],
@@ -237,22 +239,6 @@ export const useStore = defineStore('store', {
               user.type = data.type
           }
       })
-
-      // try {
-      //   // const response = await fetch(`/api/users/${data.id}`, {
-      //   const response = await fetch(`/api/users/${data.id}`, {
-      //       method: 'PUT',
-      //       body: JSON.stringify(data),
-      //       headers: { 'Content-Type': 'application/json' }
-      //   })
-      //   this.setToast({ type: 'success', message: `${data.firstName}'s account has been updated!` })
-
-      //   if (!response.ok) {
-      //       throw new Error(`HTTP error! status: ${response.status}`)
-      //   }
-      // } catch (error) {
-      //   console.error('Update user function', error);
-      // }
       
       try {
         const response = await fetch(`/api/users/${data.id}`, {
@@ -279,6 +265,99 @@ export const useStore = defineStore('store', {
         setTimeout(() => {
           this.setToast({ type: 'error', message: 'Network error while saving users' })
         }, 100)
+      }
+    },
+
+    // Update follower in user
+    async followUser(email) {
+      console.log('followUser', email)
+      const auth = this.authentication
+      if (!auth || !auth.user) return
+
+      // 1. Add email if not already followed
+      if (!auth.user.following.includes(email)) {
+        auth.user.following.push(email)
+
+        // 2. Update this.authentication and session
+        this.authentication = auth
+        sessionStorage.setItem('authentication', JSON.stringify(auth))
+
+        // 3. Find current user in store.users
+        const userIndex = this.users.findIndex(u => u.id === auth.user.id)
+        if (userIndex !== -1) {
+          this.users[userIndex].following = auth.user.following
+
+          // 4. Send PUT request to backend
+          try {
+            const response = await fetch(`/api/users/${auth.user.id}`, {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(this.users[userIndex]),
+            })
+
+            if (!response.ok) {
+              const error = await response.json()
+              console.error('Failed to update:', error)
+            } else {
+              console.log('User follow list updated on server.')
+            }
+          } catch (err) {
+            console.error('Network error updating follow list:', err)
+          }
+        }
+      }
+
+
+    },
+
+    // Update unfollower in user
+    async unfollowUser(email) {
+      console.log('unfollowUser', email)
+      const auth = this.authentication
+      if (!auth || !auth.user) return
+
+      // 1. Remove email from following
+      auth.user.following = auth.user.following.filter(e => e !== email)
+
+      // 2. Update local session
+      this.authentication = auth
+      sessionStorage.setItem('authentication', JSON.stringify(auth))
+
+      // 3. Update users array and backend
+      const userIndex = this.users.findIndex(u => u.id === auth.user.id)
+      if (userIndex !== -1) {
+        this.users[userIndex].following = auth.user.following
+
+        try {
+          const response = await fetch(`/api/users/${auth.user.id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(this.users[userIndex]),
+          })
+
+          if (!response.ok) {
+            const error = await response.json()
+            console.error('Failed to update:', error)
+          } else {
+            console.log('User unfollow list updated on server.')
+          }
+        } catch (err) {
+          console.error('Network error updating unfollow list:', err)
+        }
+      }
+    },
+
+    // Fetch User Followers
+    async fetchUserFollowers() {
+      try {
+        const response = await fetch('/api/users') // const response = await fetch('http://localhost:5000/users')
+        const data = await response.json()
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`)
+        }
+        this.userFollowers = data
+      } catch (error) {
+        console.error('Error fetching users list', error);
       }
     },
 
@@ -412,6 +491,16 @@ export const useStore = defineStore('store', {
     
     getUser: (state) => {
       return state.authentication = JSON.parse( sessionStorage.getItem('authentication') );
+    },
+
+    getUserFollowers(state){
+        const auth = JSON.parse(sessionStorage.getItem('authentication'))
+        if (!auth || !auth.user) return [];
+
+        return state.users.filter((user) =>
+          user.email !== auth.user.email &&
+          !auth.user.following.includes(user.email)
+        );
     }
   }
 })
