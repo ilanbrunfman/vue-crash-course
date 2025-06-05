@@ -31,6 +31,7 @@ const onSubmit = () => {
         email: email.value,
         password: password.value,
         type: 'user',
+        following: [],
     }
 
     duplicate.value = store.users.filter(user => user.email === email.value)
@@ -161,13 +162,14 @@ section{
     height: 100vh;
     display: grid;
     place-items: center;
-    color: #212529;
-    background-color: #f2f4f7;
+    // color: #212529;
+    // background-color: #f2f4f7;
+    background-color: var(--light);
     
     
     .form{
         width: min(320px, 420px);
-        background-color: #fff;
+         background-color: var(--background);
         
         padding: 20px;
         border: solid 1px rgba(#5d5d5d, 0.125);
@@ -212,9 +214,12 @@ section{
                 width: 100%;
                 min-height: 32px;
                 padding: 4px 8px;
-                border: solid 1px rgba(#000, 0.125);
+                // border: solid 1px rgba(#000, 0.125);
                 border-radius: 4px;
                 outline: none;
+                border: solid 1px rgba(var(--darkRGB), 0.125);
+                background-color: inherit;
+                color: var(--dark);
 
             }
 

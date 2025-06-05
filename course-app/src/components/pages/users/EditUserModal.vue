@@ -34,10 +34,14 @@ const onSubmit = () => {
         email: email.value,
         password: password.value,
         type: type.value,
+        following: user.value.following,
     }
 
     if( firstName.value && lastName.value && password.value ){
         store.updateUser(data)
+        if(data.id === store.getUser.user.id){
+            store.SET_AUTHENTICATION({active: true, type: data.type, user: data})
+        }
         store.setToast({type: 'success', title: 'Success!', message: `Updated user successfully`})
         router.push(`/${data.username}`)
         store.REMOVE_MODAL()

@@ -5,6 +5,7 @@ import { useStore } from '@/stores/index.js'
 const store = useStore()
 
 store.fetchUsers()
+store.fetchUserFollowers()
 store.fetchJobs()
 
 </script>

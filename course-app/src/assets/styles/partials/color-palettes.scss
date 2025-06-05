@@ -1,6 +1,10 @@
+@use "variables" as var;
+
 .clr{
     &-white{ color: #ffffff; }
     &-black{ color: #000000; }
+    &-light{ color: var(--ligh); }
+    &-dark{ color: var(--dark); }
     &-gray{
         &-50{ color: #FAFAFA; }
         &-100{ color: #F5F5F5; }
