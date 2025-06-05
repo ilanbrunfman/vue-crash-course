@@ -142,7 +142,7 @@ a{ cursor: pointer; }
 }
 
 .clr{
-    &-copy{ color: var(--copy); }
+    &-copy{ color: var(--color-text); }
     &-white{ color: var(--dark); }
 }
 

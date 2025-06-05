@@ -257,6 +257,7 @@ export const useStore = defineStore('store', {
           }, 100)
         } else {
           console.log('Update user successfully')
+          // this.SET_AUTHENTICATION({active: true, type: data.type, user: data})
         }
       } catch (err) {
         // Network error, timeout, etc.

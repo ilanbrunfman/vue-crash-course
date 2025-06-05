@@ -96,7 +96,11 @@
       "email": "ilanbrunfman@gmail.com",
       "password": "1234",
       "type": "admin",
-      "following": []
+      "following": [
+        "chenbrunfman@gmail.com",
+        "giladbrunfman@gmail.com",
+        "natashaboyerpt@gmail.com"
+      ]
     },
     {
       "id": "9444",
@@ -119,7 +123,9 @@
       "password": "4321",
       "type": "user",
       "following": [
-        "ilanbrunfman@gmail.com"
+        "ilanbrunfman@gmail.com",
+        "chenbrunfman@gmail.com",
+        "natashaboyerpt@gmail.com"
       ]
     },
     {
@@ -132,6 +138,18 @@
       "type": "user",
       "following": [
         "ilanbrunfman@gmail.com"
+      ]
+    },
+    {
+      "id": "4161",
+      "username": "alex-brunfman",
+      "firstName": "Alex",
+      "lastName": "Brunfman",
+      "email": "alexbrunfman@gmail.com",
+      "password": "abcd",
+      "type": "user",
+      "following": [
+        "giladbrunfman@gmail.com"
       ]
     }
   ],

@@ -1,20 +1,12 @@
 <script setup>
 import { ref, computed } from 'vue';
 import { useStore } from '@/stores/index.js'
-
 import JobCard from '@/components/pages/jobs/JobCard.vue';
 
-// defineProps({
-//     jobs: { type: Array, required: true},
-//     grid: { type: String, required: false}
-// })
-
 const store = useStore()
-
 const activeJobId = ref(null)
 const state = ref({
     jobs: [],
-    items: [],
 })
 
 state.value.jobs = computed (() => {
@@ -52,20 +44,21 @@ const toggleJob = (job) => {
 </script>
 
 <template>
-    <div v-if="state.jobs.length > 0" class="cards">
-        <div v-for="(job, index) in  state.jobs" :key="index" :class="['card', job.active ? 'active' : 'false']" @click="toggleJob(job)">
 
-            <div class="card-header">
-                <p class="fs-16 fw-700 mb-0-5">{{ job.title }} - <router-link class="clr-light" :to="`/${job.username}`">{{ job.firstName }} {{ job.lastName }}</router-link></p>
-                <p class="fs-14 fw-400 mb-0">{{ job.description }} {{ job.active }}</p>
-            </div>
-            <div class="card-header"></div>
-            <div class="card-footer"></div>
-            
-        </div>
-    </div>
+        
+    <div class="cards">
+        
+        <p v-if="state.jobs.length === 0" class="text-center">Jobs list is empty!</p>
+        <JobCard 
+            v-for="(job, index) in state.jobs"
+            :key="index"
+            :job="job"
+            @click="toggleJob(job)"
+        />                
 
-    <p v-else class="text-center">Jobs list is empty!</p>
+    </div>   
+
+
 </template>
 
 <style lang="scss" scoped>

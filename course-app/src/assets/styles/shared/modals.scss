@@ -142,11 +142,11 @@
                 width: min(100%, 768px);
                 min-height: 40px;
                 padding: 6px 12px;
-                border: solid 1px rgba(var(--darkRGB), 0.125);
                 font-size: clamp(14px, -0.875rem + 8.333vw, 16px); ;
                 border-radius: 4px;
                 outline: none;
                 font-family: inherit;
+                border: solid 1px rgba(var(--darkRGB), 0.125);
                 background-color: inherit;
                 color: var(--dark);
             }

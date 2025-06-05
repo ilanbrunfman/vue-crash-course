@@ -12,12 +12,18 @@ const logOut = () => {
     store.SET_AUTHENTICATION({active: false, type: 'deualt'})
     router.push('/login')
 }
-const user = ref({})
-// user.value = store.users.find((user) => user.id === store.getUser.user.id)
+// const user = ref({})
+// // user.value = store.users.find((user) => user.id === store.getUser.user.id)
 
-onMounted(() => {
-    user.value = store.users.find((user) => user.id === store.getUser.user.id)
+// onMounted(() => {
+//     user.value = store.users.find((user) => user.id === store.getUser.user.id)
+// })
+
+const user = computed(() => {
+    return store.users.find((user) => user.id === store.getUser.user.id)
 })
+
+
 // const user = computed(() => {
 //     return store.users.find(( user ) => user.id === store.getUser.user.id)
 // } )
@@ -64,7 +70,6 @@ window.onclick = function(event) {
             </div>
             <div class="d-flex gap-2 align-items-center position-relative">
                 <button class="user fw-500 clr-white text-underline dropbtn" @click="toggleDropdown">
-                    <!-- {{ user.firstName }} {{ user.lastName }} -->
                     <IconUser />
                 </button>
                 
@@ -75,9 +80,9 @@ window.onclick = function(event) {
                             <IconSignout />
                             <label>Sign out</label>
                         </div>
-                        <router-link :to="`${store.getUser.user.username}`" class="item item-link item-signout" >
+                        <router-link :to="`${user.username}`" class="item item-link item-signout" >
                             <IconUser />
-                            <label class="text-capitalize">{{store.getUser.user.firstName}} {{ store.getUser.user.lastName }}</label>
+                            <label class="text-capitalize">{{user.firstName}} {{ user.lastName }}</label>
                         </router-link>
                     </div>
                 </transition>
