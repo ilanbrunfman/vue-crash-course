@@ -4,10 +4,10 @@ import { useRoute } from 'vue-router';
 import { useStore } from '@/stores/index.js'
 
 import Wrapper from '@/components/shared/Wrapper.vue';
-import EditUserModal from '@/components/pages/users/EditUserModal.vue';
-import DeleteUserModal from '@/components/pages/users/DeleteUserModal.vue';
-import AddJobModal from '@/components/pages/jobs/AddJobModal.vue';
-import EditJobModal from '@/components/pages/jobs/EditJobModal.vue';
+import EditUserModal from '@/components/users/EditUserModal.vue';
+import DeleteUserModal from '@/components/users/DeleteUserModal.vue';
+import AddJobModal from '@/components/jobs/AddJobModal.vue';
+import EditJobModal from '@/components/jobs/EditJobModal.vue';
 import IconHorizontalDots from '@/components/icons/IconHorizontalDots.vue';
 import IconNotePencil from '@/components/icons/IconNotePencil.vue'
 import IconTrash from '@/components/icons/IconTrash.vue'
