@@ -3,8 +3,8 @@ import {markRaw} from 'vue';
 import { useStore } from '@/stores/index.js';
 
 import Wrapper from '@/components/shared/Wrapper.vue';
-import Users from '@/components/pages/users/Users.vue';
-import AddUserModal from '@/components/pages/users/AddUserModal.vue';
+import Users from '@/components/users/Users.vue';
+import AddUserModal from '@/components/users/AddUserModal.vue';
 
 const store = useStore()
 

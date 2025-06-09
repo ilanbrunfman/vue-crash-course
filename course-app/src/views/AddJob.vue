@@ -4,7 +4,7 @@ import Wrapper from '@/components/shared/Wrapper.vue'
 import Hero from '@/components/shared/Hero.vue'
 
 // pages/jobs
- import AddJobForm from '@/components/pages/jobs/AddJobForm.vue';
+ import AddJobForm from '@/components/jobs/AddJobForm.vue';
 </script>
 
 <template>

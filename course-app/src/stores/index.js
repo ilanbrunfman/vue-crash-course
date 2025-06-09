@@ -13,6 +13,7 @@ export const useStore = defineStore('store', {
     toast: false,
     activeModal: false,
     modals: [],
+    // idGenerator: Math.floor(Math.random() * 10000).toString().padStart(4, '0')
   }),
 
   // methods
@@ -47,6 +48,10 @@ export const useStore = defineStore('store', {
       this.toast = toast
       setTimeout(() => {this.toast = false}, 3000);
     },
+
+    // idGenerator() {
+    //   return Math.floor(Math.random() * 10000).toString().padStart(4, '0')
+    // },
 
     // Add Archive
     async addArchive(data) {
@@ -485,6 +490,10 @@ export const useStore = defineStore('store', {
     doubleCount: (state) => {
       return state.count * 2
     },
+
+    idGenerator() {
+      return Math.floor(Math.random() * 10000).toString().padStart(4, '0')
+    }, 
 
     getAuthentication: (state) => {
       return state.authentication = JSON.parse( sessionStorage.getItem('authentication') );

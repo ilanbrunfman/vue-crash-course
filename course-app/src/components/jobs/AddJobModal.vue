@@ -22,7 +22,7 @@ const error = ref({
 
 const onSubmit = () => {
     const data = {
-        id: Math.floor(Math.random() * 10000).toString().padStart(4, '0'),
+        id: store.idGenerator,
         userId: user.id,
         title: title.value,
         description: description.value,

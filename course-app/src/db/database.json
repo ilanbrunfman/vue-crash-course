@@ -96,11 +96,7 @@
       "email": "ilanbrunfman@gmail.com",
       "password": "1234",
       "type": "admin",
-      "following": [
-        "chenbrunfman@gmail.com",
-        "giladbrunfman@gmail.com",
-        "natashaboyerpt@gmail.com"
-      ]
+      "following": []
     },
     {
       "id": "9444",
@@ -183,6 +179,12 @@
       "userId": "1801",
       "title": "Alice in the wonderland",
       "description": "Looking for a white rabbit!"
+    },
+    {
+      "id": "8926",
+      "userId": "0035",
+      "title": "test with idGenerator",
+      "description": "works fine!!!"
     }
   ]
 }

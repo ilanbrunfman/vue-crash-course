@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue';
 import { useStore } from '@/stores/index.js'
-import JobCard from '@/components/pages/jobs/JobCard.vue';
+import JobCard from '@/components/jobs/JobCard.vue';
 
 const store = useStore()
 const activeJobId = ref(null)

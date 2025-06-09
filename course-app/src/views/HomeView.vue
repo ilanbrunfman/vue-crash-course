@@ -2,9 +2,9 @@
 import { markRaw } from 'vue';
 import { useStore } from '@/stores/index.js'
 import Wrapper from '@/components/shared/Wrapper.vue'
-import AddJobModal from '@/components/pages/jobs/AddJobModal.vue';
-import Jobs from '@/components/pages/jobs/Jobs.vue'
-import UserFollowers from '@/components/pages/users/UserFollowers.vue';
+import AddJobModal from '@/components/jobs/AddJobModal.vue';
+import Jobs from '@/components/jobs/Jobs.vue'
+import UserFollowers from '@/components/users/UserFollowers.vue';
 
 const store = useStore()
 

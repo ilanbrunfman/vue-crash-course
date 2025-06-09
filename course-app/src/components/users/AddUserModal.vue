@@ -23,7 +23,7 @@ const duplicate = ref([])
 
 const onSubmit = () => {
     const data = {
-        id: Math.floor(Math.random() * 10000).toString().padStart(4, '0'),
+        id: store.idGenerator,
         username: `${firstName.value.toLocaleLowerCase()}-${lastName.value.toLocaleLowerCase()}`,
         firstName: firstName.value,
         lastName: lastName.value,
